@@ -1,5 +1,0 @@
-name: Titanic-Workflow-CI
-
-entry_points:
-  main:
-    command: "python modelling.py"
