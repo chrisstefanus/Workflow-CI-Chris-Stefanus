@@ -27,7 +27,7 @@ jobs:
         run: |
           pip install mlflow pandas scikit-learn
 
-      - name: Run MLflow Project
+      - name: Run training
         working-directory: ./MLProject
         run: |
-          mlflow run .
+          python modelling.py
