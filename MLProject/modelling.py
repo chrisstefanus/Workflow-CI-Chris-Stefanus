@@ -6,7 +6,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
-df = pd.read_csv("titanic_preprocessed.csv")
+BASE_DIR = os.path.dirname(__file__)
+DATA_PATH = os.path.join(BASE_DIR, "titanic_preprocessed.csv")
+
+df = pd.read_csv(DATA_PATH)
 
 X = df.drop("Survived", axis=1)
 y = df["Survived"]
