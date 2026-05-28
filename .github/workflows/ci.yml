@@ -10,11 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup miniconda
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -22,20 +20,17 @@ jobs:
           python-version: "3.11"
           activate-environment: mlflow-env
 
-      # Install dependencies
       - name: Install dependencies
         shell: bash -l {0}
         run: |
           pip install mlflow pandas scikit-learn joblib
 
-      # Run MLflow project
       - name: Run MLflow Project
         shell: bash -l {0}
         working-directory: ./MLProject
         run: |
           mlflow run .
 
-      # Debug generated files
       - name: Check generated files
         shell: bash -l {0}
         working-directory: ./MLProject
@@ -45,7 +40,6 @@ jobs:
           ls -lah artifacts || true
           ls -R mlruns || true
 
-      # Upload artifact for Skilled requirement
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -55,23 +49,31 @@ jobs:
             MLProject/artifacts/**
             MLProject/mlruns/**
 
-      # Login Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # Build docker image with MLflow
+      - name: Find MLflow model path
+        id: modelpath
+        shell: bash -l {0}
+        working-directory: ./MLProject
+        run: |
+          MODEL_PATH=$(find mlruns -name MLmodel | head -n 1 | xargs dirname)
+
+          echo "Found model at $MODEL_PATH"
+
+          echo "MODEL_PATH=$MODEL_PATH" >> $GITHUB_ENV
+
       - name: Build Docker image
         shell: bash -l {0}
         working-directory: ./MLProject
         run: |
           mlflow models build-docker \
-            -m mlruns/0 \
+            -m "$MODEL_PATH" \
             -n ${{ secrets.DOCKER_USERNAME }}/titanic-mlflow
 
-      # Push docker image
       - name: Push Docker image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/titanic-mlflow:latest
