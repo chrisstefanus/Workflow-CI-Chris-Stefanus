@@ -10,24 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Show folder structure
-        run: |
-          pwd
-          ls -R
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: "3.11"
+          auto-update-conda: true
+          python-version: 3.11
+          activate-environment: mlflow-env
 
       - name: Install dependencies
+        shell: bash -l {0}
         run: |
-          pip install mlflow pandas scikit-learn
+          pip install mlflow
 
       - name: Run MLflow Project
+        shell: bash -l {0}
         working-directory: ./MLProject
         run: |
           mlflow run .
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: titanic-model
+          path: |
+            MLProject/artifacts/
+            MLProject/mlruns/
