@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -42,3 +43,10 @@ with mlflow.start_run():
     )
 
 print("Accuracy:", accuracy)
+
+os.makedirs("artifacts", exist_ok=True)
+
+joblib.dump(model, "artifacts/model.pkl")
+
+with open("artifacts/metrics.txt", "w") as f:
+    f.write(f"Accuracy: {accuracy}")
