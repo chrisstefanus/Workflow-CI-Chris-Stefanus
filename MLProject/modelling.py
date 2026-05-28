@@ -42,11 +42,21 @@ with mlflow.start_run():
         y_pred
     )
 
+# wajib buat folder
+    artifact_dir = os.path.join(BASE_DIR, "artifacts")
+    os.makedirs(artifact_dir, exist_ok=True)
+
+    # simpan model
+    joblib.dump(
+        model,
+        os.path.join(artifact_dir, "model.pkl")
+    )
+
+    # simpan metric
+    with open(
+        os.path.join(artifact_dir, "metrics.txt"),
+        "w"
+    ) as f:
+        f.write(f"Accuracy: {accuracy}")
+        
 print("Accuracy:", accuracy)
-
-os.makedirs("artifacts", exist_ok=True)
-
-joblib.dump(model, "artifacts/model.pkl")
-
-with open("artifacts/metrics.txt", "w") as f:
-    f.write(f"Accuracy: {accuracy}")
