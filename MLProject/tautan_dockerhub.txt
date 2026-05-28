@@ -1,0 +1,22 @@
+Tautan Docker Hub Submission Dicoding
+
+Username Docker Hub:
+chrisstefanus
+
+Repository:
+titanic-mlflow
+
+Link:
+https://hub.docker.com/r/chrisstefanus/titanic-mlflow
+
+Tag:
+latest
+
+GitHub Repository:
+https://github.com/chrisstefanus/Workflow-CI-Chris-Stefanus
+
+Workflow:
+MLflow CI Advanced
+
+Keterangan:
+Docker image model Titanic MLflow berhasil dibuat melalui GitHub Actions CI/CD dan di-push ke Docker Hub.
